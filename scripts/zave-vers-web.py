@@ -186,6 +186,7 @@ def calque(e):
     elif t == 'video':
         if not p or not os.path.isfile(p): return None
         o['src'] = media(p); o['auto'] = e.get('autoPlay') == '1'; o['boucle'] = e.get('loop') == '1'; o['ferme'] = e.get('closeAtEnd') == '1'; o['sansBarre'] = e.get('hiddenControlBar') == '1'
+        if e.get('fullScreenOnly') == '1': o['seulPlein'] = True   # l'iPad la joue en plein écran : son cadre n'est qu'un repère (L'art de croire, 60 × 45 px)
         al = e.find('alternateImage/image')
         if al is not None and (q := chemin(al)) and os.path.isfile(q): o['affiche'] = image(q, nom + '-affiche')
     elif t == 'audio':

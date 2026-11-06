@@ -41,6 +41,7 @@ MuPDF livre l'alpha prémultiplié : lire le pixmap en mode PIL `RGBa`, sinon le
 
 ## Vidéos
 Une vidéo en `autoPlay` s'affiche sans barre de lecture.
+Une vidéo en `fullScreenOnly="1"` se joue toujours en plein écran : son cadre sur la page n'est qu'un repère, souvent minuscule (60 × 45 px dans L'art de croire, lancée par un bouton ▶ via l'action 812). Le convertisseur la marque `seulPlein` ; le moteur cache son cadre, l'ouvre dans `#plein` dès qu'elle démarre, et la remet dans son cadre, arrêtée, à la fermeture (croix, Échap, fin de lecture, changement de page).
 Sur iPad, une vidéo en lecture passe devant tous les calques, même placée plus bas dans la pile : la remonter pendant la lecture. Elle ne doit pas capter les clics si elle démarre seule, et doit être devant dès l'arrivée sur la page, sinon les titres apparaissent pendant son chargement.
 
 ## Sons minuteurs

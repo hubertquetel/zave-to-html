@@ -39,7 +39,8 @@
   }
   // plein écran : l'image, ou le diaporama à son image en cours
   // fenêtre par-dessus le magazine : toujours une croix bien visible, et Échap ; changer de page la referme
-  const fermer = () => document.getElementById('plein')?.remove();
+  // une vidéo plein écran regagne son cadre, arrêtée (croix, Échap, fin de lecture ou changement de page)
+  const fermer = () => { const o = document.getElementById('plein'); o?.querySelectorAll('video').forEach(v => v.retour?.()); o?.remove(); };
   const fermable = o => { const b = document.createElement('button'); b.className = 'fermer'; b.setAttribute('aria-label', 'Fermer'); b.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>'; o.append(b); o.onclick = fermer; scene.append(o); };
   function plein(c) {
     const l = c.sources || [...c.querySelectorAll(':scope > img')].map(i => i.getAttribute('src')); if (!l.length) return; let n = c.lire ? c.lire() : 0;
@@ -150,6 +151,12 @@
       if (o.auto && !o.cache) { e.style.zIndex = 5; v.preload = 'auto'; v.addEventListener('error', () => { e.style.zIndex = ''; }); }
       v.addEventListener('playing', () => { e.style.zIndex = 5; }); v.addEventListener('pause', () => { if (v.ended || !v.currentTime) e.style.zIndex = ''; });
       v.addEventListener('ended', () => { e.style.zIndex = ''; if (o.ferme) e.hidden = true; agir(o.fin); }); e.append(v); if (!o.sansBarre && !o.auto) e.classList.add('act');
+      // fullScreenOnly : l'iPad ouvre la vidéo en plein écran, son cadre sur la page n'est qu'un repère
+      if (o.seulPlein) {
+        e.classList.add('seul-plein'); v.retour = () => { v.pause(); e.append(v); }; v.onclick = x => x.stopPropagation();
+        v.addEventListener('play', () => { if (v.closest('#plein')) return; fermer(); const f = document.createElement('div'); f.id = 'plein'; f.append(v); fermable(f); });
+        v.addEventListener('ended', () => { if (v.closest('#plein')) fermer(); });
+      }
     } else if (o.t === 'audio') {
       const m = document.createElement('audio'); m.src = base + o.src; m.preload = o.auto ? 'metadata' : 'none'; m.loop = o.boucle; let fini = false; const finir = () => { if (!fini && e.isConnected) { fini = true; agir(o.fin); } }; m.addEventListener('ended', finir); m.addEventListener('error', finir); e.append(m);   // un son illisible ne doit pas figer le scénario qu'il enchaîne
       // son lancé à l'ouverture : il sert souvent de minuteur au scénario, qui doit se jouer même si le navigateur bloque le son
