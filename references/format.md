@@ -28,7 +28,7 @@ Déduit des fichiers, sans documentation officielle, sur des magazines de 2012 �
 - **Actions sur un groupe** : `804` vise soit `contentId`, soit `groupId` (les noms de `groupIds`). Les fichiers récents utilisent surtout les groupes.
 - **Marqueurs** : `marker` a `activateActions` et `deactivateActions` ; ils agissent dès que le marqueur est entièrement visible, pas seulement à l'arrêt (preuve : marqueur à 1988 + 60 = 2048 sur une page de 2048). Un sous-document n'a un arrêt par panneau que si ses marqueurs sont tous multiples de sa largeur. C'est ainsi que changent les flèches et les fonds flous.
 - **Flèches dessinées** : un PDF de flèche n'a souvent aucune action (repère de glissement sur iPad). Rendre cliquables les bords des sous-documents coulissants.
-- **JPEG à fond blanc détouré** sur du texte : l'afficher en `mix-blend-mode: multiply`, seulement si tout son pourtour est blanc et que le blanc couvre au moins 35 % de l'image (sinon elle noircit sur fond sombre).
+- **JPEG à fond blanc détouré** sur du texte : l'afficher en `mix-blend-mode: multiply`, seulement si tout son pourtour est blanc et que le blanc couvre au moins 35 % de l'image (sinon elle noircit sur fond sombre), et si ce qui est posé dessous est blanc à au moins 50 % sous son cadre : sur un décor coloré ou sombre, l'iPad montre le carré blanc (aplat bleu de L'art de croire, barre de menu de Panoramik n° 2, livre sur fond noir de Jazz Portfolio).
 - **WebP** : 16 383 px maximum de côté ; réduire les longues bandes.
 - **iframe** : ne jamais utiliser `scrollIntoView`, il fait défiler la page parente.
 

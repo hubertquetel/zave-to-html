@@ -16,6 +16,7 @@ Tout ce tableau vient de vrais retours de relecture. Méthode : ouvrir `data.jso
 | Diaporama de commande tout noir | `cellBackgroundColor` peint sur des images transparentes | pas de fond de case |
 | Image déformée, écrasée dans son cadre | original d'une image agrandissable affiché à la place de son recadrage | `thumbSource` dans la page, `fileSource` en plein écran |
 | Logo ou carte blanche devenue noire | règle du détourage blanc appliquée à une image posée exactement sur une autre (états d'un bouton) | pas de `multiply` si un calque de même boîte est dessous |
+| JPEG à fond blanc teinté par le décor (carré bleuté, barre de menu noire, image disparue sur fond noir) | `multiply` appliqué sur un décor coloré ; l'iPad affiche le JPEG opaque | pas de `multiply` si le calque dessous est blanc à moins de 50 % sous le cadre (`blanc_dessous`) ; vérifier sur l'aperçu `previews/` |
 | Barres noires autour d'un titre en diaporama | aplat de case (`cellBackgroundColor`) autour d'images détourées | pas d'aplat dès qu'une image a de la transparence |
 | Intertitre collé au texte | retours à la ligne faits d'espaces | `<br>` à la place de 4 espaces ou plus |
 | Texte coupé au bas d'une page de sous-document | la page suivante déborde par-dessus | couper chaque page à ses bords |

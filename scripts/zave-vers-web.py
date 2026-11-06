@@ -287,8 +287,22 @@ def sans_mult_superpose(l):
     for k, o in enumerate(l):
         if o.get('mult') and any((p['x'], p['y'], p['w'], p['h']) == (o['x'], o['y'], o['w'], o['h']) for p in l[:k]): del o['mult']
         for q in o.get('pages', []): sans_mult_superpose(q['calques'])
+def blanc_dessous(o, l, fond):
+    # part de blanc sous l'image : le multiply laisse voir un texte sur fond blanc, il ne doit pas teinter un décor coloré (aplat bleu de L'art de croire)
+    vus = 0; blancs = 0; fb = fond.lower() in ('#fff', '#ffffff', '#ffffffff')
+    for p in l:
+        if p is o or p.get('t') not in ('image', 'pdf') or not p.get('src') or p.get('cache'): continue
+        if not (p['x'] <= o['x'] + 1 and p['y'] <= o['y'] + 1 and p['x'] + p['w'] >= o['x'] + o['w'] - 1 and p['y'] + p['h'] >= o['y'] + o['h'] - 1): continue
+        im = Image.open(os.path.join(sortie, p['src'])).convert('RGBA'); kx, ky = im.width / p['w'], im.height / p['h']
+        z = im.crop((int((o['x'] - p['x']) * kx), int((o['y'] - p['y']) * ky), int((o['x'] - p['x'] + o['w']) * kx), int((o['y'] - p['y'] + o['h']) * ky))).resize((32, 32))
+        px = list(z.getdata()); vus = len(px); blancs = sum((a < 20 and fb) or (a >= 20 and min(r, g, b) >= 235) for r, g, b, a in px)
+    return blancs / vus if vus else (1 if fb else 0)
+def sans_mult_colore(l, fond):
+    for k, o in enumerate(l):
+        if o.get('mult') and blanc_dessous(o, l[:k], fond) < .5: del o['mult']
+        for q in o.get('pages', []): sans_mult_colore(q['calques'], q.get('fond') or '#fff')
 for a in articles:
-    for q in a['pages']: sans_mult_superpose(q['calques'])
+    for q in a['pages']: sans_mult_superpose(q['calques']); sans_mult_colore(q['calques'], q['fond'])
 json.dump({'articles': articles}, open(os.path.join(sortie, 'data.json'), 'w'), ensure_ascii=False, separators=(',', ':'))
 print(len(articles), 'articles', sum(len(a['pages']) for a in articles), 'pages')
 print('calques PDF', BILAN['pdf'], 'avec marge', BILAN['decales'], 'objets', BILAN['objets'], 'vides', len(BILAN['vides']), BILAN['vides'][:12])
